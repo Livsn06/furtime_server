@@ -71,4 +71,10 @@ class AuthenticationController extends Controller
         $access_token = $request->bearerToken();
         return response()->json(["message" => "Session accepted", "data" => $user, "access_token" => $access_token], 200);
     }
+
+    public function logout(Request $request)
+    {
+        $request->user()->tokens()->delete();
+        return response()->json(["message" => "user logged out"], 200);
+    }
 }
