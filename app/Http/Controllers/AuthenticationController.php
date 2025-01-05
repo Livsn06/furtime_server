@@ -77,4 +77,31 @@ class AuthenticationController extends Controller
         $request->user()->tokens()->delete();
         return response()->json(["message" => "user logged out"], 200);
     }
+
+
+    public function updateProfile(Request $request, User $user)
+    {
+        $user = $request->user();
+        // Check if an image is uploaded
+        if ($request->hasFile('image')) {
+            // Validate the image
+            $request->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+
+            // Store the image in a local folder
+            $imagePath = $request->file('image')->store('profile_images', 'public');
+
+            // Save the image path to the user's profile
+            $user->profile = $imagePath;
+        }
+
+        // Update other fields if necessary
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->update();
+
+        // Respond with success
+        return response()->json(["message" => "success", "data" => $user], 200);
+    }
 }
