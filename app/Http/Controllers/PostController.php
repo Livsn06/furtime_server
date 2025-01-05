@@ -14,7 +14,7 @@ class PostController extends Controller
     public function index()
     {
         //GET POST BY DATE LATEST
-        $post = Post::with('user')->orderBy('created_at', 'desc')->get();
+        $post = Post::with('user', 'comments')->orderBy('created_at', 'desc')->get();
         return response()->json(["message" => "success", "data" => $post], 200);
     }
 
